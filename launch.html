@@ -104,12 +104,15 @@ alert('Le message n\'a pas pu être envoyé.')
         })
     })
     socket.on('chat message', function(msg) {
-
+let rslts = []
 var txt = document.createElement('h3');
 var thumbnail = document.createElement('img')
 var button = document.createElement('button')
+msg.formats.forEach(format=>{
+    if(format.acodec == "mp4a.40.2" && format.ext == "mp4") rslts.push(format.url)
+  })
 function onClick() {
-        window.open(msg.requested_downloads[0].requested_formats[0].url)
+        window.open(rslts[1])
 }
       txt.textContent = msg.title;
       thumbnail.src = msg.thumbnail

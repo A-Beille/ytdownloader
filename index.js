@@ -39,7 +39,6 @@ io.on('connection', (socket) => {
   youtubeSkipDashManifest: true
 }).then(output => {
   io.emit('ipalert',ipverif)
-  console.log(socket.broadcast.to(user[ipverif]))
   io.sockets.in(ipverif).emit('chat message',output)}).catch(err=>{
     io.emit('ipalert',ipverif)
   io.emit('chat message',"Lien invalide !")
