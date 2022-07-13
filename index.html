@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<head>
+    <title>Téléchargement de vidéos Youtube</title>
+    <style>
+        body{
+        background-color: rgb(34, 39, 44);
+        color: white;
+        font-family: system-ui
+    }
+          body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    
+          #form {  padding: 0.25rem;  display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
+          #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
+          #input:focus { outline: none; }
+          #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; transition: 100ms;}
+          #form > button:hover { background: rgb(48, 46, 46); border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; transition: 100ms;}
+    #dlbutton {   background-color:  #5865F2 ;
+    text-align: center;
+    border-radius: 5px;
+    border: 0px solid;
+    padding: 19px 10px;
+    width: 250px;
+    color: white;
+    font-size: 105%;
+    cursor: pointer;
+    transition: 100ms;}
+    #dlbutton:hover{
+        background-color:#4b55c9;
+    text-align: center;
+    border-radius: 5px;
+    border: 0px solid;
+    padding: 19px 10px;
+    width: 250px;
+    color: white;
+    font-size: 105%;
+    cursor: pointer;
+    transition: 100ms;
+    }
+       
+        </style>
+</head>
+<body>
+    <div class="a" style="text-align: center;">
+    <h1>Télechargement de vidéo Youtube</h1>
+    <h2>Mettez le lien de la vidéo ci-dessous, puis cliquez sur "télécharger".</h2>
+    <form id="form" action="">
+    <input id="input" autocomplete="off" /><button style="cursor: pointer;" title="Télécharger">Télécharger</button>
+    </form>
+    <ul id="messages"></ul>
+</div>
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    let isverified = true
+    $.get('https://www.cloudflare.com/cdn-cgi/trace', function(data) {
+  data = data.trim().split('\n').reduce(function(obj, pair) {
+    pair = pair.split('=');
+    return obj[pair[0]] = pair[1], obj;
+  }, {});
+  socket.emit('ip',`${data.ip}`)
+})
+    var socket = io();
+    var messages = document.getElementById('messages');
+    var form = document.getElementById('form');
+    var input = document.getElementById('input');
+form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      if (input) {
+        let a
+        if(input.value){
+          socket.emit('chat message', input.value);
+          }
+        input.value = '';
+      }
+    })
+    socket.on('alert',(z)=>{
+      alert(z)
+    })
+    socket.on('load',(url)=>{
+      window.location.href = url
+    })
+    socket.on('cancel',()=>{
+alert('Le message n\'a pas pu être envoyé.')
+    })
+    socket.on('error', function(name,msg) {
+      var item = document.createElement('p');
+      item.textContent = 'The system has encountered a problem and stopped unexpectedly. We sent the errors infos to the iUS team';
+      item.style = 'color:red;'
+      messages.appendChild(item);
+      window.scrollTo(0, document.body.scrollHeight);
+    });
+    $.get('https://www.cloudflare.com/cdn-cgi/trace', function(data) {
+  data = data.trim().split('\n').reduce(function(obj, pair) {
+    pair = pair.split('=');
+    return obj[pair[0]] = pair[1], obj;
+  }, {});
+  socket.on('ipalert',ip=>{
+            console.log(ip)
+            console.log(data.ip)
+            if(ip != data.ip){
+                isverified = false
+            }
+        })
+    })
+    socket.on('chat message', function(msg) {
+    if(!isverified) {
+        console.log("ah")
+        return;
+    }
+var txt = document.createElement('h3');
+var thumbnail = document.createElement('img')
+var button = document.createElement('button')
+function onClick() {
+        window.open(msg.requested_downloads[0].requested_formats[0].url)
+}
+      txt.textContent = msg.title;
+      thumbnail.src = msg.thumbnail
+      thumbnail.height = 100
+      thumbnail.width = 200
+      button.style="cursor: pointer;" 
+      button.title="Télécharger"
+      button.textContent = "Télécharger"
+      button.id = "dlbutton"
+      messages.appendChild(thumbnail);
+      messages.appendChild(txt);
+      messages.appendChild(button);
+      messages.appendChild(document.createElement("br"));
+      window.scrollTo(0, document.body.scrollHeight);
+      button.addEventListener("click", onClick, false);
+})
+  </script>
+</body>
