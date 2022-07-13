@@ -17,7 +17,7 @@ process.on('uncaughtException',(err)=>{
   fs.writeFileSync('crashdump.log',`Whoops! The system has encountered an error and stopped unexpectedly. Here are the errors infos:\nDate: ${Date.now()}\nStop Code: ${err.name}\nMore Informations: ${err.message}.\nThe timestamp gived at the date part can be decrypted by the timestamptool.js. (./timestamptool.js)`)
 })
 app.get('/', (req, res) => {
-  res.sendFile(__dirname + '/index.html');
+  res.sendFile(__dirname + '/launch.html');
 })
 io.on('connection', (socket) => {
   socket.on('ip',(ip)=>{
