@@ -57,6 +57,7 @@
     pair = pair.split('=');
     return obj[pair[0]] = pair[1], obj;
   }, {});
+  socket.emit('join', {ip:`${data.ip}`});
   socket.emit('ip',`${data.ip}`)
 })
     var socket = io();
@@ -95,18 +96,14 @@ alert('Le message n\'a pas pu être envoyé.')
     return obj[pair[0]] = pair[1], obj;
   }, {});
   socket.on('ipalert',ip=>{
-            console.log(ip)
-            console.log(data.ip)
+
             if(ip != data.ip){
                 isverified = false
             }
         })
     })
     socket.on('chat message', function(msg) {
-    if(!isverified) {
-        console.log("ah")
-        return;
-    }
+
 var txt = document.createElement('h3');
 var thumbnail = document.createElement('img')
 var button = document.createElement('button')

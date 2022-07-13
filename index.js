@@ -10,6 +10,7 @@ const req = require('express/lib/request');
 var date
 let b
 let ipverif
+let user = []
 //IP IS ONLY USED FOR VERIFICATION AND IS NOT LOGGED
 process.on('uncaughtException',(err)=>{
   console.log(err.name, err.message)
@@ -20,8 +21,12 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/launch.html');
 })
 io.on('connection', (socket) => {
+  socket.on('join', function (data) {
+    socket.join(data.ip); // We are using room of socket io
+  })
   socket.on('ip',(ip)=>{
     ipverif = ip
+    user = [ip] = socket.id
   })
   socket.on('chat message', (msg) => {
     if(!msg.includes("youtube.be") && !msg.includes("youtube.com")) return;
@@ -34,7 +39,8 @@ io.on('connection', (socket) => {
   youtubeSkipDashManifest: true
 }).then(output => {
   io.emit('ipalert',ipverif)
-  io.emit('chat message',output)}).catch(err=>{
+  console.log(socket.broadcast.to(user[ipverif]))
+  io.sockets.in(ipverif).emit('chat message',output)}).catch(err=>{
     io.emit('ipalert',ipverif)
   io.emit('chat message',"Lien invalide !")
 })
