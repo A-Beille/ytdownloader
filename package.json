@@ -1,0 +1,19 @@
+{
+    "name": "socket-chat-test",
+    "version": "0.0.1",
+    "main": "index.js",
+    "description": "",
+    "engines": {
+        "node": "16.x",
+        "npm": "6.x"
+    },
+    "dependencies": {
+        "discord.js": "^13.6.0",
+        "express": "^4.17.3",
+        "socket.io": "^4.4.1",
+        "youtube-dl-exec": "^2.1.2"
+    },
+    "scripts": {
+        "start": "node index"
+    }
+}
