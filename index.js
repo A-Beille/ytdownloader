@@ -22,14 +22,13 @@ app.get('/', (req, res) => {
 })
 io.on('connection', (socket) => {
   socket.on('join', function (data) {
-    socket.join(data.ip); // We are using room of socket io
+    socket.join(data.ip);
   })
   socket.on('ip',(ip)=>{
     ipverif = ip
     user = [ip] = socket.id
   })
   socket.on('chat message', (msg) => {
-    if(!msg.includes("youtube.be") && !msg.includes("youtube.com")) return;
        youtubedl(msg, {
   dumpSingleJson: true,
   noWarnings: true,

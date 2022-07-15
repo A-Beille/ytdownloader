@@ -17,7 +17,8 @@
           #input:focus { outline: none; }
           #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; transition: 100ms;}
           #form > button:hover { background: rgb(48, 46, 46); border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; transition: 100ms;}
-    #dlbutton {   background-color:  #5865F2 ;
+    #vc{cursor: pointer;}
+          #dlbutton {   background-color:  #5865F2 ;
     text-align: center;
     border-radius: 5px;
     border: 0px solid;
@@ -44,11 +45,13 @@
 </head>
 <body>
     <div class="a" style="text-align: center;">
-    <h1>Télechargement de vidéo Youtube</h1>
-    <h2>Mettez le lien de la vidéo ci-dessous, puis cliquez sur "télécharger". <span style="font-weight: bolder;">Rien ne s'affiche ? Rechargez et si vous avez un bloqueur de publicités, désactivez le (il peut poser des problèmes au chargement) puis refaites les manipulations. Le temps de génération est proche de 5 secondes.</span></h2>
+    <h1>Télechargement de vidéos YouTube</h1>
+    <h2>Mettez le lien de la vidéo ci-dessous, puis cliquez sur "télécharger". <span style="font-weight: bolder;">Rien ne s'affiche ? Rechargez et si vous avez un bloqueur de publicités, désactivez le (il peut poser des problèmes au chargement) puis refaites les manipulations. Le temps de génération est proche de 5 secondes.</span> Le système peut télécharger des vidéos de n'importe quelle platforme.</h2>
     <form id="form" action="">
     <input id="input" autocomplete="off" /><button style="cursor: pointer;" title="Télécharger">Télécharger</button>
     </form>
+    <input type="checkbox" id="vc">
+<label for="vc" id="vc">Audio uniquement (ne fonctionne pas pour Twitter et Reddit)</label>
     <ul id="messages"></ul>
 </div>
 <script src="/socket.io/socket.io.js"></script>
@@ -109,11 +112,29 @@ let rslts = []
 var txt = document.createElement('h3');
 var thumbnail = document.createElement('img')
 var button = document.createElement('button')
+var checkedValue = null; 
+var vc = document.getElementById("vc")
+let num = 1
+if(vc.checked){
+           checkedValue = vc.value;
+      }
+      Array.prototype.last = function () {
+    return this[this.length - 1];
+};
 msg.formats.forEach(format=>{
-    if(format.acodec == "mp4a.40.2" && format.ext == "mp4") rslts.push(format.url)
+  if(checkedValue){
+    if(format.resolution == "audio only" && msg.extractor.toLowerCase() != "tiktok") rslts.push(format.url)
+    if(msg.extractor.toLowerCase() == "tiktok") {
+      num = 0
+      rslts.push(msg.formats.last().url)}
+  }
+  else{
+    if(format.acodec == "mp4a.40.2" && format.ext == "mp4" && msg.extractor.toLowerCase() == "youtube") rslts.push(format.url)
+    if(msg.extractor.toLowerCase() != "youtube") rslts.push(format.url)
+  }
   })
 function onClick() {
-        window.open(rslts[1])
+        window.open(rslts[num])
 }
       txt.textContent = msg.title;
       thumbnail.src = msg.thumbnail
