@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<head>
+    <title>Youtube Video Downloader</title>
+    <link rel="icon" href="https://media.discordapp.net/attachments/983803620820647986/996853716470739064/favicon.png">
+    <style>
+        body{
+        background-color: rgb(34, 39, 44);
+        color: white;
+        font-family: system-ui
+    }
+          body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+    
+          #form {  padding: 0.25rem;  display: flex; height: 3rem; box-sizing: border-box; backdrop-filter: blur(10px); }
+          #input { border: none; padding: 0 1rem; flex-grow: 1; border-radius: 2rem; margin: 0.25rem; }
+          #input:focus { outline: none; }
+          #form > button { background: #333; border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; transition: 100ms;}
+          #form > button:hover { background: rgb(48, 46, 46); border: none; padding: 0 1rem; margin: 0.25rem; border-radius: 3px; outline: none; color: #fff; transition: 100ms;}
+    #vc{cursor: pointer;}
+          #dlbutton {   background-color:  #5865F2 ;
+    text-align: center;
+    border-radius: 5px;
+    border: 0px solid;
+    padding: 19px 10px;
+    width: 250px;
+    color: white;
+    font-size: 105%;
+    cursor: pointer;
+    transition: 100ms;}
+    #dlbutton:hover{
+        background-color:#4b55c9;
+    text-align: center;
+    border-radius: 5px;
+    border: 0px solid;
+    padding: 19px 10px;
+    width: 250px;
+    color: white;
+    font-size: 105%;
+    cursor: pointer;
+    transition: 100ms;
+    }
+       
+        </style>
+</head>
+<body>
+    <div class="a" style="text-align: center;">
+    <h1>Télechargement de vidéos YouTube</h1>
+    <h2>Mettez le lien de la vidéo ci-dessous, puis cliquez sur "télécharger". <span style="font-weight: bolder;">Rien ne s'affiche ? Rechargez et si vous avez un bloqueur de publicités, désactivez le (il peut poser des problèmes au chargement) puis refaites les manipulations. Le temps de génération est proche de 5 secondes.</span> Le système peut télécharger des vidéos de n'importe quelle platforme.</h2>
+    <form id="form" action="">
+    <input id="input" autocomplete="off" /><button style="cursor: pointer;" title="Télécharger">Télécharger</button>
+    </form>
+    <input type="checkbox" id="vc">
+<label for="vc" id="vc">Audio uniquement</label>
+    <ul id="messages"></ul>
+</div>
+<script>
+    let form = document.getElementById("form")
+    form.addEventListener("submit",(t)=>{
+        var txt = document.createElement('h3');
+var thumbnail = document.createElement('img')
+var link = document.getElementById('input').value
+var button = document.createElement('button')
+var checkedValue = "video"; 
+var vc = document.getElementById("vc")
+let num = 1
+if(vc.checked){
+           checkedValue = "audio";
+      }
+        t.preventDefault()
+        fetch(`https://api.microlink.io/?url=${link}&${checkedValue}`) .then(function (response) {
+                return response.json();
+            })
+            .then(function (msg) {
+                function onClick(){
+                    window.open(`${msg.data[checkedValue].url}`)
+                }
+                console.log(msg);
+                txt.textContent = msg.data.title;
+      thumbnail.src = msg.data.image.url
+      thumbnail.height = 100
+      thumbnail.width = 200
+      button.style="cursor: pointer;" 
+      button.title="Télécharger"
+      button.textContent = "Télécharger"
+      button.id = "dlbutton"
+      messages.appendChild(thumbnail);
+      messages.appendChild(txt);
+      messages.appendChild(button);
+      messages.appendChild(document.createElement("br"));
+      window.scrollTo(0, document.body.scrollHeight);
+      button.addEventListener("click", onClick, false);
+            })
+            .catch(function (err) {
+                console.log('error: ' + err);
+            });
+    })
+  </script>
+</body>
