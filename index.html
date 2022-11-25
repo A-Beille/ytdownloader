@@ -66,6 +66,18 @@ if(vc.checked){
            checkedValue = "audio";
       }
         t.preventDefault()
+        const messages = document.getElementById("messages")
+        const at = document.getElementsByClassName("error_text")
+        if(at){
+        for(let i = 0;i<at.length;i++){
+            messages.removeChild(at.item(i))
+        }
+        }
+        const progresstext = document.createElement("h3")
+        progresstext.textContent = "La vidéo est en cours"
+        progresstext.id = "progress"
+        progresstext.style = "color: #5865F2"
+        messages.appendChild(progresstext)
         fetch(`https://api.microlink.io/?url=${link}&${checkedValue}`) .then(function (response) {
                 return response.json();
             })
@@ -73,6 +85,8 @@ if(vc.checked){
                 function onClick(){
                     window.open(`${msg.data[checkedValue].url}`)
                 }
+                const progresstextrm = document.getElementById("progress")
+            messages.removeChild(progresstextrm)
                 txt.textContent = msg.data.title;
       thumbnail.src = msg.data.image.url
       thumbnail.height = 100
@@ -88,8 +102,12 @@ if(vc.checked){
       window.scrollTo(0, document.body.scrollHeight);
       button.addEventListener("click", onClick, false);
             })
-            .catch(function (err) {
-                console.log('error: ' + err);
+            .catch(function (e) {
+                let err = document.createElement("h3")
+                err.textContent = "Une erreur s'est produite, la vidéo n'a pas pu être généré."
+                err.className = "error_text"
+                err.style = "color: red;"
+                messages.appendChild(err)
             });
     })
   </script>
